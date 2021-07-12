@@ -11,6 +11,9 @@
   width: 560px;
   height: 560px;
   border: 1px solid black;
+  /* change the box-sizing to not border-box so the border is outside the grid
+     it was wrapping weirdly without this */
+  box-sizing: initial;
 }
 
 .grid div {
