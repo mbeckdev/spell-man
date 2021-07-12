@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid');
   const scoreDisplay = document.getElementById('score');
   const width = 28; //28 x 28 = 784 squares
+  let score = 0;
 
   // layout of grid and what is in the squares
   const layout = [
@@ -137,11 +138,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     squares[pacmanCurrentIndex].classList.add('pac-man');
 
-    // pacDotEaten()
+    pacDotEaten();
     // powerPelletEaten()
     // checkForGameOver()
     // checkForWin()
   }
 
   document.addEventListener('keyup', movePacman);
+
+  // What happens when pac-man eats a pac-dot
+  function pacDotEaten() {
+    if (squares[pacmanCurrentIndex].classList.contains('pac-dot')) {
+      score++;
+      scoreDisplay.textContent = score;
+      squares[pacmanCurrentIndex].classList.remove('pac-dot');
+    }
+  }
 });
