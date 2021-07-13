@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,
-    1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 4, 1, 1, 1, 2, 2, 1, 1,
+    1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 4, 1, 2, 1, 2, 2, 1, 1,
     1, 4, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 4, 1, 2, 2, 2,
     2, 2, 2, 1, 4, 1, 1, 0, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 0, 0, 0, 4, 1,
     2, 2, 2, 2, 2, 2, 1, 4, 0, 0, 0, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 0, 1,
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     pacDotEaten();
     powerPelletEaten();
-    // checkForGameOver()
+    checkGameOver();
     // checkForWin()
   }
 
@@ -246,12 +246,23 @@ document.addEventListener('DOMContentLoaded', () => {
         score += 100;
         squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
       }
+
+      checkGameOver();
     }, ghost.speed);
   }
 
-  // setInterval(function () {
-  //   console.log('ha');
-  // }, 500);
+  // Check for game over
+  function checkGameOver() {
+    if (
+      squares[pacmanCurrentIndex].classList.contains('ghost') &&
+      !squares[pacmanCurrentIndex].classList.contains('scared-ghost')
+    ) {
+      ghosts.forEach((ghost) => clearInterval(ghost.timerId));
+      document.removeEventListener('keyup', movePacman);
+      // setTimeout(function () {
+      //   alert('Game Over!'),500;
+      // });
+      scoreDisplay.textContent = 'GAME OVER';
+    }
+  }
 });
-
-//2602 video stopped at
