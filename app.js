@@ -87,10 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
     word_display.appendChild(square);
   }
 
-  window.addEventListener('click', (e) => {
-    if (e.keyCode == 489 || e.keyCode == 490) {
-      console.log(indexof(e.code));
-    }
+  document.addEventListener('keydown', function (event) {
+    console.log(event.code);
   })
 
   // Starting position of pac-man
