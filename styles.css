@@ -5,12 +5,13 @@
 }
 
 body{
-  height: 100%;
+  height: auto;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  overflow: auto;
 }
 
 /* <--------- Content before the game window --------->*/
@@ -25,13 +26,13 @@ h2 {
   line-height: 1.6;
 }
 
-#current_word {
-  color: rgb(212, 69, 69);
-}
-
-#display_word {
+#display-word {
+  width: 200px;
+  height: 100px;
   display: flex;
-  border: 1px solid black;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
 }
 
 /* <--------- Content for the game window ---------> */

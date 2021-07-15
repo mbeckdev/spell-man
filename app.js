@@ -80,9 +80,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const square = document.createElement('div');
     square.style.display = 'inline-block';
     square.textContent = word[i];
+    square.style.color = 'rgb(212, 69, 69)';
+    square.style.fontSize = '50px';
+    square.style.border = '1px solid black';
+    square.style.padding = '0px 2px';
     word_display.appendChild(square);
   }
 
+  window.addEventListener('click', (e) => {
+    if (e.keyCode == 489 || e.keyCode == 490) {
+      console.log(indexof(e.code));
+    }
+  })
 
   // Starting position of pac-man
   let pacmanCurrentIndex = 490;
