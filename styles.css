@@ -21,8 +21,17 @@ body{
   color: rgb(214, 241, 60)
 }
 
+h2 {
+  line-height: 1.6;
+}
+
 #current_word {
   color: rgb(212, 69, 69);
+}
+
+#display_word {
+  display: flex;
+  border: 1px solid black;
 }
 
 /* <--------- Content for the game window ---------> */

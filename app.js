@@ -73,6 +73,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   createBoard();
 
+  // Creating word that needs to be found
+  let word = "THAT";
+  const word_display = document.getElementById('display-word');
+  for (let i = 0; i < word.length; i++) {
+    const square = document.createElement('div');
+    square.style.display = 'inline-block';
+    square.textContent = word[i];
+    word_display.appendChild(square);
+  }
+
+
   // Starting position of pac-man
   let pacmanCurrentIndex = 490;
   squares[pacmanCurrentIndex].classList.add('pac-man');
