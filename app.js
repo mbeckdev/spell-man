@@ -1,5 +1,9 @@
 'use strict';
 
+// eating button element and music
+const bite_music = document.createElement('audio');
+bite_music.setAttribute('src', 'music/zapsplat_cartoon_bite_single_crunch_001_29121.mp3');
+
 document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid');
   const scoreDisplay = document.getElementById('score');
@@ -167,9 +171,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // What happens when pac-man eats a pac-dot
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains('pac-dot')) {
+      bite_music.play();
       score++;
       scoreDisplay.textContent = score;
       squares[pacmanCurrentIndex].classList.remove('pac-dot');
+
     }
   }
 
