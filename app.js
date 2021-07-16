@@ -1,8 +1,13 @@
 'use strict';
 
-// eating button element and music
+// eating button element
 const bite_music = document.createElement('audio');
 bite_music.setAttribute('src', 'music/zapsplat_cartoon_bite_single_crunch_001_29121.mp3');
+
+// autoplay sound
+window.addEventListener('click', () => {
+  document.getElementById('audioplayer').play();
+})
 
 document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid');
@@ -82,8 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const word_display = document.getElementById('display-word');
   for (let i = 0; i < word.length; i++) {
     const square = document.createElement('div');
+    square.className = 'character';
     square.style.display = 'inline-block';
-    square.textContent = word[i];
+    square.style.width = '40px';
+    square.style.height = '70px';
     square.style.color = 'rgb(212, 69, 69)';
     square.style.fontSize = '50px';
     square.style.border = '1px solid black';
@@ -181,11 +188,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // What happens when you eat a power-pellet
   function powerPelletEaten() {
+    let i = 0;
+    let word = "THAT";
+    const curr_letter = document.querySelectorAll('.character');
     if (squares[pacmanCurrentIndex].classList.contains('power-pellet')) {
       score += 10;
       ghosts.forEach((ghost) => (ghost.isScared = true));
       setTimeout(unScareGhosts, 10000);
       squares[pacmanCurrentIndex].classList.remove('power-pellet');
+      if (i < word.length) {
+        curr_letter[i].textContent = word[i];
+
+      }
+      console.log(squares.length);
     }
   }
 
