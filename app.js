@@ -196,12 +196,9 @@ document.addEventListener('DOMContentLoaded', () => {
       ghosts.forEach((ghost) => (ghost.isScared = true));
       setTimeout(unScareGhosts, 10000);
       squares[pacmanCurrentIndex].classList.remove('power-pellet');
-      if (i < word.length) {
-        curr_letter[i].textContent = word[i];
-
-      }
-      console.log(squares.length);
+      i += 1;
     }
+    console.log(i);
   }
 
   // Make the ghosts stop appearing as aquamarine
