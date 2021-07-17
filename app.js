@@ -187,18 +187,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // What happens when you eat a power-pellet
+  // variable for 
+  let i = 0;
   function powerPelletEaten() {
-    let i = 0;
-    let word = "THAT";
     const curr_letter = document.querySelectorAll('.character');
-    if (squares[pacmanCurrentIndex].classList.contains('power-pellet')) {
+    if (squares[pacmanCurrentIndex].classList.contains('power-pellet') && i < word.length) {
       score += 10;
       ghosts.forEach((ghost) => (ghost.isScared = true));
       setTimeout(unScareGhosts, 10000);
       squares[pacmanCurrentIndex].classList.remove('power-pellet');
+      curr_letter[i].textContent = word[i];
       i += 1;
+      return i;
     }
-    console.log(i);
+
   }
 
   // Make the ghosts stop appearing as aquamarine
@@ -304,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check for a win
   function checkForWin() {
-    if (score === 274) {
+    if (score === 274 || i === (word.length - 1)) {
       ghosts.forEach((ghost) => clearInterval(ghost.timerId));
       document.removeEventListener('keyup', movePacman);
       scoreDisplay.textContent = 'YOU WIN';
