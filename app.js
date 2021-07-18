@@ -187,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // What happens when you eat a power-pellet
-  // variable for 
   let i = 0;
   function powerPelletEaten() {
     const curr_letter = document.querySelectorAll('.character');
@@ -306,7 +305,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check for a win
   function checkForWin() {
-    if (score === 274 || i === (word.length - 1)) {
+    if (score === 274 || i === word.length) {
+      console.log(i);
       ghosts.forEach((ghost) => clearInterval(ghost.timerId));
       document.removeEventListener('keyup', movePacman);
       scoreDisplay.textContent = 'YOU WIN';
