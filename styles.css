@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-body{
+body {
   height: auto;
   width: 100%;
   display: flex;
@@ -19,7 +19,7 @@ body{
 #game_name {
   font-size: 5rem;
   font-family: 'Roboto', sans-serif;
-  color: rgb(214, 241, 60)
+  color: rgb(214, 241, 60);
 }
 
 h2 {
@@ -33,6 +33,18 @@ h2 {
   justify-content: space-between;
   align-items: center;
   margin: 0;
+}
+
+/* <--------- Content after the game window --------->*/
+
+#play-button {
+  /* this will be 'Play' or 'Play Again' or 
+  'Next Level' or be hidden */
+  width: 6rem;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 /* <--------- Content for the game window ---------> */

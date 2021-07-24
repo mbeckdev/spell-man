@@ -19,16 +19,97 @@ document.addEventListener('DOMContentLoaded', () => {
   const scoreDisplay = document.getElementById('score');
   const width = 28; //28 x 28 = 784 squares
   let score = 0;
+  let currentLevel = 0;
+  let pacmanCurrentIndex = undefined;
+  let word = '';
+  let ghosts = [];
+  let squares = [];
+  const word_display = document.getElementById('display-word');
+  const playButton = document.getElementById('play-button');
+  // 'initial','playing','lost','won'
+  let gameState = 'initial';
 
   // layout of grid and what is in the squares
   // see boards.js for board layouts
   let layout = [];
-  layout = boards[0];
 
-  let squares = [];
+  // Create our Ghost template
+  class Ghost {
+    constructor(className, startIndex, speed) {
+      this.className = className;
+      this.startIndex = startIndex;
+      this.speed = speed;
+      this.currentIndex = startIndex;
+      this.timerId = NaN;
+      this.isScared = false;
+    }
+  }
+
+  setupInitialThings();
+  function setupInitialThings() {
+    // document.addEventListener('keydown', function (event) {
+    //   console.log(event.code);
+    // });
+    document.addEventListener('keyup', movePacman);
+    playButton.addEventListener('click', playButtonClicked);
+
+    createLevel(0, 'THAT');
+    dontAllowPlay();
+  }
+
+  function playButtonClicked() {
+    switch (gameState) {
+      case 'initial':
+        gameState = 'playing';
+        // allow gameplay of first level after load
+        allowPlay();
+        // hide this button, don't let them click it
+        playButton.classList.add('hidden');
+        break;
+      case 'playing':
+        // do nothing: you shouldn't be able to click this while playing
+        break;
+      case 'lost':
+        // you clicked on 'play again', so start game over
+        currentLevel = 0;
+        letterIndex = 0;
+        createLevel(currentLevel, 'CHAR');
+
+        gameState = 'playing';
+        allowPlay();
+        //hide playbuttton
+        playButton.classList.add('hidden');
+        break;
+      case 'won':
+        // you clicked on 'next level', so load the next level
+        currentLevel++;
+        letterIndex = 0;
+        createLevel(currentLevel, 'WIND');
+
+        gameState = 'playing';
+        allowPlay();
+        //hide button because you'll be playing now
+        playButton.classList.add('hidden');
+        break;
+    }
+  }
+
+  // Allow play to start
+  // - allow chracter and ghosts to move
+  function allowPlay() {
+    document.addEventListener('keyup', movePacman);
+    tellGhostsToMove();
+  }
+
+  // - don't allow chracter or ghosts to move
+  function dontAllowPlay() {
+    document.removeEventListener('keyup', movePacman);
+    ghosts.forEach((ghost) => clearInterval(ghost.timerId));
+  }
 
   // draw the grid and render it
   function createBoard() {
+    squares = [];
     for (let i = 0; i < layout.length; i++) {
       const square = document.createElement('div');
       grid.appendChild(square);
@@ -47,31 +128,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  createBoard();
-
-  // Creating word that needs to be found
-  let word = 'THAT';
-  const word_display = document.getElementById('display-word');
-  for (let i = 0; i < word.length; i++) {
-    const square = document.createElement('div');
-    square.className = 'character';
-    square.style.display = 'inline-block';
-    square.style.width = '40px';
-    square.style.height = '70px';
-    square.style.color = 'rgb(212, 69, 69)';
-    square.style.fontSize = '50px';
-    square.style.border = '1px solid black';
-    square.style.padding = '0px 2px';
-    word_display.appendChild(square);
+  function deleteDivsInGrid() {
+    while (grid.firstChild) {
+      grid.removeChild(grid.lastChild);
+    }
   }
 
-  document.addEventListener('keydown', function (event) {
-    console.log(event.code);
-  });
+  // currentLevel++; before calling createLevel(currentLevel)
+  // Replace old level and characters with new ones
+  function createLevel(levelIndex, wordToSpell) {
+    deleteDivsInGrid();
+    layout = boards[levelIndex]; //board[0] = 'level 1' shown to the user
+    createBoard(); //takes board array and colors in squares
+    // determine starting position of character
+    setCharacterPosition(490); //490 for initial character position on first board
+
+    deleteGhosts();
+    // determine starting position of ghosts
+
+    //   change ghosts[  ..stuff.. ] because this has starting positions in it
+    // ghost placement for initial board
+    ghosts = [
+      new Ghost('blinky', 348, 250),
+      new Ghost('pinky', 376, 400),
+      new Ghost('inky', 351, 300),
+      new Ghost('clyde', 379, 500),
+    ];
+    drawGhostsOnGrid();
+    // tellGhostsToMove();
+
+    removeLetterSquares();
+    createWord(wordToSpell);
+  }
+
+  function removeLetterSquares() {
+    while (word_display.firstChild) {
+      word_display.removeChild(word_display.lastChild);
+    }
+  }
+
+  // Creating word that needs to be found
+  function createWord(aWord) {
+    word = aWord;
+    for (let i = 0; i < word.length; i++) {
+      const square = document.createElement('div');
+      square.className = 'character';
+      square.style.display = 'inline-block';
+      square.style.width = '40px';
+      square.style.height = '70px';
+      square.style.color = 'rgb(212, 69, 69)';
+      square.style.fontSize = '50px';
+      square.style.border = '1px solid black';
+      square.style.padding = '0px 2px';
+      word_display.appendChild(square);
+    }
+  }
 
   // Starting position of pac-man
-  let pacmanCurrentIndex = 490;
-  squares[pacmanCurrentIndex].classList.add('pac-man');
+  function setCharacterPosition(startingIndex) {
+    pacmanCurrentIndex = startingIndex;
+    squares[pacmanCurrentIndex].classList.add('pac-man');
+  }
 
   // Move pac-man
   function movePacman(e) {
@@ -140,8 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
     checkForWin();
   }
 
-  document.addEventListener('keyup', movePacman);
-
   // What happens when pac-man eats a pac-dot
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains('pac-dot')) {
@@ -153,20 +268,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // What happens when you eat a power-pellet
-  let i = 0;
+  let letterIndex = 0;
   function powerPelletEaten() {
     const curr_letter = document.querySelectorAll('.character');
     if (
       squares[pacmanCurrentIndex].classList.contains('power-pellet') &&
-      i < word.length
+      letterIndex < word.length
     ) {
       score += 10;
       ghosts.forEach((ghost) => (ghost.isScared = true));
       setTimeout(unScareGhosts, 10000);
       squares[pacmanCurrentIndex].classList.remove('power-pellet');
-      curr_letter[i].textContent = word[i];
-      i += 1;
-      return i;
+      curr_letter[letterIndex].textContent = word[letterIndex];
+      letterIndex += 1;
+      return letterIndex;
     }
   }
 
@@ -175,34 +290,22 @@ document.addEventListener('DOMContentLoaded', () => {
     ghosts.forEach((ghost) => (ghost.isScared = false));
   }
 
-  // Create our Ghost template
-  class Ghost {
-    constructor(className, startIndex, speed) {
-      this.className = className;
-      this.startIndex = startIndex;
-      this.speed = speed;
-      this.currentIndex = startIndex;
-      this.timerId = NaN;
-      this.isScared = false;
-    }
+  function deleteGhosts() {
+    ghosts = [];
   }
 
-  let ghosts = [];
-  ghosts = [
-    new Ghost('blinky', 348, 250),
-    new Ghost('pinky', 376, 400),
-    new Ghost('inky', 351, 300),
-    new Ghost('clyde', 379, 500),
-  ];
+  function drawGhostsOnGrid() {
+    // Draw my ghosts onto the grid
+    ghosts.forEach((ghost) => {
+      squares[ghost.currentIndex].classList.add(ghost.className);
+      squares[ghost.currentIndex].classList.add('ghost');
+    });
+  }
 
-  // Draw my ghosts onto the grid
-  ghosts.forEach((ghost) => {
-    squares[ghost.currentIndex].classList.add(ghost.className);
-    squares[ghost.currentIndex].classList.add('ghost');
-  });
-
-  // Move the ghosts randomly
-  ghosts.forEach((ghost) => moveGhost(ghost));
+  function tellGhostsToMove() {
+    // Move the ghosts randomly
+    ghosts.forEach((ghost) => moveGhost(ghost));
+  }
 
   // Write the function to move the ghosts
   function moveGhost(ghost) {
@@ -262,22 +365,30 @@ document.addEventListener('DOMContentLoaded', () => {
       squares[pacmanCurrentIndex].classList.contains('ghost') &&
       !squares[pacmanCurrentIndex].classList.contains('scared-ghost')
     ) {
-      ghosts.forEach((ghost) => clearInterval(ghost.timerId));
-      document.removeEventListener('keyup', movePacman);
+      gameState = 'lost';
+      dontAllowPlay();
+
       // setTimeout(function () {
       //   alert('Game Over!'),500;
       // });
       scoreDisplay.textContent = 'GAME OVER';
+      playButton.classList.remove('hidden');
+      playButton.textContent = 'PLAY AGAIN';
     }
   }
 
   // Check for a win
   function checkForWin() {
-    if (score === 274 || i === word.length) {
-      console.log(i);
-      ghosts.forEach((ghost) => clearInterval(ghost.timerId));
+    if (letterIndex === word.length) {
+      // if (score === 274 || letterIndex === word.length) {
+      gameState = 'won';
+      console.log(letterIndex);
+
+      dontAllowPlay();
       document.removeEventListener('keyup', movePacman);
       scoreDisplay.textContent = 'YOU WIN';
+      playButton.classList.remove('hidden');
+      playButton.textContent = 'NEXT LEVEL';
     }
   }
 });
