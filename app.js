@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // see boards.js for board layouts
   let layout = [];
   let allLevels = [];
+  let maxLives = 3;
+  let lives = maxLives;
+  const livesOnScreen = document.getElementById('lives');
+  livesOnScreen.textContent = maxLives;
 
   // Create our Ghost template
   class Ghost {
@@ -107,6 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 'lost':
         // you clicked on 'play again', so start game over
+        lives = maxLives;
+        livesOnScreen.textContent = lives;
         currentLevel = 0;
         letterIndex = 0;
         createLevel(currentLevel + 1, allLevels[currentLevel].word);
@@ -170,6 +176,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function resetGhostPositions() {
+    // for (let i = 0; i < ghosts.length; i++) {
+    grid.querySelectorAll('.ghost').forEach((thisDiv) => {
+      thisDiv.classList.remove('ghost');
+    });
+    grid.querySelector('.blinky').classList.remove('blinky');
+    grid.querySelector('.pinky').classList.remove('pinky');
+    grid.querySelector('.inky').classList.remove('inky');
+    grid.querySelector('.clyde').classList.remove('clyde');
+
+    // ghosts[i].currentIndex;
+    // ghosts[i].startIndex = allLevels[currentLevel].fourGhostPositions[i];
+    // }
+
+    deleteGhosts();
+    // determine starting position of ghosts
+
+    //   change ghosts[  ..stuff.. ] because this has starting positions in it
+    // ghost placement for initial board
+    ghosts = [
+      new Ghost('blinky', allLevels[currentLevel].fourGhostPositions[0], 250),
+      new Ghost('pinky', allLevels[currentLevel].fourGhostPositions[1], 400),
+      new Ghost('inky', allLevels[currentLevel].fourGhostPositions[2], 300),
+      new Ghost('clyde', allLevels[currentLevel].fourGhostPositions[3], 500),
+    ];
+    drawGhostsOnGrid();
+  }
+
+  function resetPositionsOnly() {
+    // setCharacterPosition(
+    //   allLevels[levelIndex - 1].characterPosition,
+    //   levelIndex
+    // );
+    grid.querySelector('.pac-man').classList.remove('pac-man');
+    pacmanCurrentIndex = allLevels[currentLevel].characterPosition;
+    setCharacterPosition(pacmanCurrentIndex, currentLevel);
+
+    resetGhostPositions();
+  }
+
   // currentLevel++; before calling createLevel(currentLevel)
   // Replace old level and characters with new ones
   function createLevel(levelIndex, wordToSpell) {
@@ -177,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
     layout = boards[allLevels[levelIndex - 1].board];
 
     //takes board array and colors in squares
-    createBoard(); 
+    createBoard();
 
     // determine starting position of character
     setCharacterPosition(
@@ -407,15 +453,23 @@ document.addEventListener('DOMContentLoaded', () => {
       squares[pacmanCurrentIndex].classList.contains('ghost') &&
       !squares[pacmanCurrentIndex].classList.contains('scared-ghost')
     ) {
-      gameState = 'lost';
       dontAllowPlay();
+      lives--;
+      livesOnScreen.textContent = lives;
+      if (lives > 0) {
+        resetPositionsOnly();
+        allowPlay();
+        // else you lost the game, you'll have to start over from the beginning
+      } else {
+        gameState = 'lost';
+        scoreDisplay.textContent = 'GAME OVER';
+        playButton.classList.remove('hidden');
+        playButton.textContent = 'PLAY AGAIN';
+      }
 
       // setTimeout(function () {
       //   alert('Game Over!'),500;
       // });
-      scoreDisplay.textContent = 'GAME OVER';
-      playButton.classList.remove('hidden');
-      playButton.textContent = 'PLAY AGAIN';
     }
   }
 
