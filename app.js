@@ -348,6 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // What happens when pac-man eats a pac-dot
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains('pac-dot')) {
+      bite_music.currentTime = 0;
       bite_music.play();
       score++;
       scoreDisplay.textContent = score;
