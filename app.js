@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // layout of grid and what is in the squares
   // see boards.js for board layouts
   let layout = [];
+  let allLevels = [];
 
   // Create our Ghost template
   class Ghost {
@@ -45,6 +46,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  class Level {
+    // first level  level 1 should have levelNumber of 1 and will use boards[0]
+    constructor(
+      levelNumber,
+      boardLayoutNumber,
+      levelWord,
+      characterPosition,
+      fourGhostPositions
+    ) {
+      this.levelNumber = levelNumber;
+      // I split out levelNumber and board to be easier to test different levels but only have 1 level so far
+      this.board = boardLayoutNumber;
+      this.word = levelWord;
+      this.characterPosition = characterPosition;
+      // an array of positions, ie [123,124,125,126]
+      this.fourGhostPositions = fourGhostPositions;
+    }
+  }
+
   setupInitialThings();
   function setupInitialThings() {
     // document.addEventListener('keydown', function (event) {
@@ -53,8 +73,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keyup', movePacman);
     playButton.addEventListener('click', playButtonClicked);
 
-    createLevel(0, 'THAT');
+    planLevels();
+    createLevel(1, allLevels[0].word);
     dontAllowPlay();
+  }
+
+  // plan out all levels here
+
+  function planLevels() {
+    let level1 = new Level(1, 0, 'GNAT', 518, [376, 404, 379, 407]);
+    allLevels.push(level1);
+    let level2 = new Level(2, 1, 'HATS', 490, [349, 377, 352, 380]);
+    allLevels.push(level2);
+    let level3 = new Level(3, 0, 'IIII', 518, [376, 404, 379, 407]);
+    allLevels.push(level3);
+    let level4 = new Level(4, 1, 'JJJJ', 490, [349, 377, 352, 380]);
+    allLevels.push(level4);
+
+    //490, [348, 376, 351, 379] <- original spots
   }
 
   function playButtonClicked() {
@@ -73,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // you clicked on 'play again', so start game over
         currentLevel = 0;
         letterIndex = 0;
-        createLevel(currentLevel, 'CHAR');
+        createLevel(currentLevel + 1, allLevels[currentLevel].word);
 
         gameState = 'playing';
         allowPlay();
@@ -84,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // you clicked on 'next level', so load the next level
         currentLevel++;
         letterIndex = 0;
-        createLevel(currentLevel, 'WIND');
+        createLevel(currentLevel + 1, allLevels[currentLevel].word);
 
         gameState = 'playing';
         allowPlay();
@@ -138,10 +174,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Replace old level and characters with new ones
   function createLevel(levelIndex, wordToSpell) {
     deleteDivsInGrid();
-    layout = boards[levelIndex]; //board[0] = 'level 1' shown to the user
-    createBoard(); //takes board array and colors in squares
+    layout = boards[allLevels[levelIndex - 1].board];
+
+    //takes board array and colors in squares
+    createBoard(); 
+
     // determine starting position of character
-    setCharacterPosition(490); //490 for initial character position on first board
+    setCharacterPosition(
+      allLevels[levelIndex - 1].characterPosition,
+      levelIndex
+    );
 
     deleteGhosts();
     // determine starting position of ghosts
@@ -149,10 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
     //   change ghosts[  ..stuff.. ] because this has starting positions in it
     // ghost placement for initial board
     ghosts = [
-      new Ghost('blinky', 348, 250),
-      new Ghost('pinky', 376, 400),
-      new Ghost('inky', 351, 300),
-      new Ghost('clyde', 379, 500),
+      new Ghost('blinky', allLevels[levelIndex - 1].fourGhostPositions[0], 250),
+      new Ghost('pinky', allLevels[levelIndex - 1].fourGhostPositions[1], 400),
+      new Ghost('inky', allLevels[levelIndex - 1].fourGhostPositions[2], 300),
+      new Ghost('clyde', allLevels[levelIndex - 1].fourGhostPositions[3], 500),
     ];
     drawGhostsOnGrid();
     // tellGhostsToMove();
@@ -185,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Starting position of pac-man
-  function setCharacterPosition(startingIndex) {
+  function setCharacterPosition(startingIndex, levelIndex) {
     pacmanCurrentIndex = startingIndex;
     squares[pacmanCurrentIndex].classList.add('pac-man');
   }
