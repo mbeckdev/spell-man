@@ -1,6 +1,7 @@
 'use strict';
 
 import { boards } from './boards.js';
+import { words } from './words.js';
 
 // eating button element
 const bite_music = document.createElement('audio');
@@ -37,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let lives = maxLives;
   const livesOnScreen = document.getElementById('lives');
   livesOnScreen.textContent = maxLives;
+  let posibleLetterSpaces = [];
+  let wordWritten = '';
 
   // Create our Ghost template
   class Ghost {
@@ -85,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // plan out all levels here
 
   function planLevels() {
-    let level1 = new Level(1, 0, 'GNAT', 518, [376, 404, 379, 407]);
+    let level1 = new Level(1, 0, 'SEA', 518, [376, 404, 379, 407]);
     allLevels.push(level1);
     let level2 = new Level(2, 1, 'HATS', 490, [349, 377, 352, 380]);
     allLevels.push(level2);
@@ -115,6 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
         livesOnScreen.textContent = lives;
         currentLevel = 0;
         letterIndex = 0;
+        score = 0;
+        scoreDisplay.textContent = score;
         createLevel(currentLevel + 1, allLevels[currentLevel].word);
 
         gameState = 'playing';
@@ -152,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // draw the grid and render it
   function createBoard() {
     squares = [];
+    posibleLetterSpaces = [];
     for (let i = 0; i < layout.length; i++) {
       const square = document.createElement('div');
       grid.appendChild(square);
@@ -166,6 +172,36 @@ document.addEventListener('DOMContentLoaded', () => {
         squares[i].classList.add('ghost-lair');
       } else if (layout[i] === 3) {
         squares[i].classList.add('power-pellet');
+      } else if (layout[i] === 5) {
+        posibleLetterSpaces.push(i);
+      }
+    }
+  }
+
+  function putLettersOnGrid(wordToSpell) {
+    let pastLetterSpaces = [];
+    for (let i = 0; i < wordToSpell.length; i++) {
+      
+      let randomLetterIndex = Math.floor(
+        Math.random() * posibleLetterSpaces.length
+      );
+      while (pastLetterSpaces.indexOf(randomLetterIndex) !== -1) {
+        randomLetterIndex = Math.floor(
+          Math.random() * posibleLetterSpaces.length
+        );
+      }
+      
+      pastLetterSpaces.push(randomLetterIndex);
+      // console.log(posibleLetterSpaces)
+      
+      squares[posibleLetterSpaces[randomLetterIndex]].classList.add('letter');
+      squares[posibleLetterSpaces[randomLetterIndex]].textContent = wordToSpell[i];
+    }
+
+    // fill in the rest of possible letter spaces with pac dots
+    for (let i = 0; i < posibleLetterSpaces.length; i++) {
+      if ((squares[posibleLetterSpaces[i]].textContent == '')) {
+        squares[posibleLetterSpaces[i]].classList.add('pac-dot');
       }
     }
   }
@@ -247,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     removeLetterSquares();
     createWord(wordToSpell);
+    putLettersOnGrid(wordToSpell);
   }
 
   function removeLetterSquares() {
@@ -270,7 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
       square.style.padding = '0px 2px';
       word_display.appendChild(square);
     }
-  }
+    const fullWord = document.getElementById('full-word');
+    fullWord.textContent = word}
 
   // Starting position of pac-man
   function setCharacterPosition(startingIndex, levelIndex) {
@@ -341,8 +379,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     pacDotEaten();
     powerPelletEaten();
-    checkGameOver();
+    letterEaten();
     checkForWin();
+    checkGameOver();
   }
 
   // What happens when pac-man eats a pac-dot
@@ -356,10 +395,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function letterEaten() {
+    const lettersOnBoard = document.querySelectorAll('.letter');
+    const curr_letters = document.querySelectorAll('.character');
+    if (squares[pacmanCurrentIndex].classList.contains('letter')) {
+      curr_letters[letterIndex].textContent =
+        squares[pacmanCurrentIndex].textContent;
+      letterIndex++;
+      squares[pacmanCurrentIndex].classList.remove('letter');
+      squares[pacmanCurrentIndex].textContent = '';
+      score += 10; 
+    }
+
+  }
+
   // What happens when you eat a power-pellet
   let letterIndex = 0;
   function powerPelletEaten() {
-    const curr_letter = document.querySelectorAll('.character');
+    const curr_letters = document.querySelectorAll('.character');
     if (
       squares[pacmanCurrentIndex].classList.contains('power-pellet') &&
       letterIndex < word.length
@@ -368,9 +421,9 @@ document.addEventListener('DOMContentLoaded', () => {
       ghosts.forEach((ghost) => (ghost.isScared = true));
       setTimeout(unScareGhosts, 10000);
       squares[pacmanCurrentIndex].classList.remove('power-pellet');
-      curr_letter[letterIndex].textContent = word[letterIndex];
-      letterIndex += 1;
-      return letterIndex;
+      // curr_letters[letterIndex].textContent = word[letterIndex];
+      // letterIndex += 1;
+      // return letterIndex;
     }
   }
 
@@ -472,20 +525,40 @@ document.addEventListener('DOMContentLoaded', () => {
       //   alert('Game Over!'),500;
       // });
     }
+
+    // if you used all the letters and they weren't in the right spots
+    // (if they were in the right spots)
+    if ((letterIndex === word.length) && 
+        (wordWritten !== word)
+    ) {
+      dontAllowPlay();
+      gameState = 'lost';
+      scoreDisplay.textContent = 'GAME OVER';
+      playButton.classList.remove('hidden');
+      playButton.textContent = 'PLAY AGAIN';
+    }
   }
 
   // Check for a win
   function checkForWin() {
     if (letterIndex === word.length) {
-      // if (score === 274 || letterIndex === word.length) {
-      gameState = 'won';
-      console.log(letterIndex);
 
-      dontAllowPlay();
-      document.removeEventListener('keyup', movePacman);
-      scoreDisplay.textContent = 'YOU WIN';
-      playButton.classList.remove('hidden');
-      playButton.textContent = 'NEXT LEVEL';
+      wordWritten = '';
+      for(let i = 0; i <word_display.children.length; i++) {
+        wordWritten += word_display.childNodes[i].textContent;
+      }
+      
+      if (wordWritten == word) {
+        // if (score === 274 || letterIndex === word.length) {
+        gameState = 'won';
+        console.log(letterIndex);
+  
+        dontAllowPlay();
+        document.removeEventListener('keyup', movePacman);
+        scoreDisplay.textContent = 'YOU WIN';
+        playButton.classList.remove('hidden');
+        playButton.textContent = 'NEXT LEVEL';
+      }
     }
   }
 });

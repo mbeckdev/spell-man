@@ -27,13 +27,14 @@ h2 {
 }
 
 #display-word {
-  width: 200px;
+  /* width: 200px; */
   height: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 0;
 }
+
 
 /* <--------- Content after the game window --------->*/
 
@@ -66,9 +67,19 @@ h2 {
   height: 20px;
 }
 
+.letter {
+  text-align: center;
+  background-color: darkslategrey;
+  color: rgb(214, 241, 60);
+  /* background-color: lightgoldenrodyellow; */
+  font-size: larger;
+  /* border: 3px solid red; */
+  border-radius: 25%;
+}
+
 .pac-dot {
   background-color: green;
-  border: 5px solid white;
+  border: 8px solid white;
 }
 
 .wall {
