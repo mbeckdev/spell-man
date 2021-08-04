@@ -216,6 +216,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // for (let i = 0; i < ghosts.length; i++) {
     grid.querySelectorAll('.ghost').forEach((thisDiv) => {
       thisDiv.classList.remove('ghost');
+      if (thisDiv.classList.contains('scared-ghost')) {
+        thisDiv.classList.remove('scared-ghost');
+      }
     });
     grid.querySelector('.blinky').classList.remove('blinky');
     grid.querySelector('.pinky').classList.remove('pinky');
@@ -320,7 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function movePacman(e) {
     squares[pacmanCurrentIndex].classList.remove('pac-man');
 
-    console.log(pacmanCurrentIndex);
     switch (e.keyCode) {
       // left arrow key moves left
       case 37:
@@ -399,14 +401,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const lettersOnBoard = document.querySelectorAll('.letter');
     const curr_letters = document.querySelectorAll('.character');
     if (squares[pacmanCurrentIndex].classList.contains('letter')) {
-      curr_letters[letterIndex].textContent =
-        squares[pacmanCurrentIndex].textContent;
-      letterIndex++;
-      squares[pacmanCurrentIndex].classList.remove('letter');
-      squares[pacmanCurrentIndex].textContent = '';
-      score += 10; 
-    }
 
+      let correctLetter = word[letterIndex]
+      let letterYouAte = squares[pacmanCurrentIndex].textContent
+      // if letter is correct letter ....
+      if (letterYouAte == correctLetter) {
+        curr_letters[letterIndex].textContent =
+          squares[pacmanCurrentIndex].textContent;
+        letterIndex++;
+        squares[pacmanCurrentIndex].classList.remove('letter');
+        squares[pacmanCurrentIndex].textContent = '';
+        score += 10; 
+        
+      // else -> remove life and reset char and enemies
+      } else {
+        dontAllowPlay();
+        lives--;
+        livesOnScreen.textContent = lives;
+        resetPositionsOnly();
+        allowPlay();
+        checkGameOver(); 
+      }
+    }
   }
 
   // What happens when you eat a power-pellet
@@ -526,11 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // });
     }
 
-    // if you used all the letters and they weren't in the right spots
-    // (if they were in the right spots)
-    if ((letterIndex === word.length) && 
-        (wordWritten !== word)
-    ) {
+    if (lives <= 0) {
       dontAllowPlay();
       gameState = 'lost';
       scoreDisplay.textContent = 'GAME OVER';
