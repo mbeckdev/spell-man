@@ -1,4 +1,4 @@
-# spell-man
+# word-chomp
 
 a game for a gamejam
 
