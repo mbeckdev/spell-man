@@ -301,13 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < word.length; i++) {
       const square = document.createElement('div');
       square.className = 'character';
-      square.style.display = 'inline-block';
-      square.style.width = '40px';
-      square.style.height = '70px';
-      square.style.color = 'rgb(212, 69, 69)';
-      square.style.fontSize = '50px';
-      square.style.border = '1px solid black';
-      square.style.padding = '0px 2px';
       word_display.appendChild(square);
     }
     const fullWord = document.getElementById('full-word');

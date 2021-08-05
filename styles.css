@@ -3,15 +3,38 @@
   margin: 0;
   box-sizing: border-box;
 }
-
+:root {
+  --muted-white: rgb(184, 185, 170);
+  --muted-red: rgb(212, 69, 69);
+  --main-yellow-color: rgb(214, 241, 60);
+  --main-button-color: rgb(212, 69, 69);
+  --button-color-2: rgb(214, 224, 122);
+}
 body {
-  height: auto;
-  width: 100%;
+  /* height: auto; */
+  /* width: 100%; */
   display: flex;
   justify-content: center;
-  align-items: center;
-  flex-direction: column;
   overflow: auto;
+  background: #0f2027;
+  color: var(--muted-white);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#full-word {
+  color: rgb(212, 69, 69);
+  padding: 0;
+  font-size: larger;
+}
+
+body,
+button {
+  font-family: sans-serif;
 }
 
 /* <--------- Content before the game window --------->*/
@@ -19,29 +42,66 @@ body {
 #game_name {
   font-size: 5rem;
   font-family: 'Roboto', sans-serif;
-  color: rgb(214, 241, 60);
+  color: var(--main-yellow-color);
+  margin-bottom: -20px;
+  text-shadow: 1px 1px 5px black;
 }
 
 h2 {
   line-height: 1.6;
+  text-shadow: 1px 1px 5px black;
 }
 
 #display-word {
   /* width: 200px; */
-  height: 100px;
+  height: 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 0;
 }
 
+#level-lives-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+}
 
 /* <--------- Content after the game window --------->*/
+
+/* button { */
+/* background-color: blue;
+  border-top-color: white;
+  border-left-color: white;
+  border-bottom-color: rgb(0, 0, 0);
+  border-right-color: rgb(0, 0, 0); */
+/* } */
+
+button {
+  font-size: larger;
+  font-weight: bold;
+  border: 5px solid transparent;
+  transition: 0.2s ease;
+  border-radius: 100px;
+
+  background-color: var(--button-color-2);
+  border: 5px solid var(--main-button-color);
+}
+
+button:hover {
+  color: var(--main-button-color);
+  transform: scale(1.1);
+
+  color: var(--button-color-2);
+  background-color: var(--main-button-color);
+}
 
 #play-button {
   /* this will be 'Play' or 'Play Again' or 
   'Next Level' or be hidden */
-  width: 6rem;
+  /* width: 6rem; */
+  padding: 2px 45px;
 }
 
 .hidden {
@@ -56,7 +116,8 @@ h2 {
   /* 28 x 28 squares each square is 20px wide */
   width: 560px;
   height: 560px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  box-shadow: 0 0 10px #060c0f;
   /* change the box-sizing to not border-box so the border is outside the grid
      it was wrapping weirdly without this */
   box-sizing: initial;
@@ -67,56 +128,122 @@ h2 {
   height: 20px;
 }
 
+.character {
+  display: inline-block;
+  color: rgb(212, 69, 69);
+  font-size: 50px;
+  font-weight: bold;
+  padding: 0px 2px;
+  text-align: center;
+  text-shadow: 0 0 5px black;
+  /* width: 50px; */
+  /* height: 70px; */
+  /* border: 1px solid #2c5364; */
+}
+
 .letter {
   text-align: center;
-  background-color: darkslategrey;
-  color: rgb(214, 241, 60);
-  /* background-color: lightgoldenrodyellow; */
+  font-weight: bold;
   font-size: larger;
-  /* border: 3px solid red; */
-  border-radius: 25%;
+  color: rgb(9, 15, 15);
+  background: radial-gradient(rgb(239, 248, 191) 40%, rgb(212, 69, 69) 120%);
 }
 
 .pac-dot {
   background-color: green;
-  border: 8px solid white;
+  border: 8px solid #0f2027;
 }
 
 .wall {
-  background-color: blue;
+  background-color: #2c5364;
 }
 
 .power-pellet {
-  background-color: green;
+  /* background-color: green; */
+  background: linear-gradient(45deg, green, rgb(130, 207, 160));
   border-radius: 10px;
 }
 
+.scared-ghost {
+  /* background-color: aquamarine; */
+  background: linear-gradient(45deg, aquamarine, rgb(75, 150, 146)) !important;
+  border: 0px;
+}
+
 .blinky {
-  background-color: red;
+  background: linear-gradient(45deg, red, rgb(136, 39, 0));
   border: 0px;
 }
 
 .pinky {
-  background-color: pink;
+  background: linear-gradient(45deg, rgb(68, 255, 146), rgb(55, 131, 99));
   border: 0px;
 }
 
 .inky {
-  background-color: cyan;
+  /* background-color: cyan; */
+  background: linear-gradient(45deg, cyan, rgb(0, 81, 128));
   border: 0px;
 }
 
 .clyde {
-  background-color: orange;
-  border: 0px;
-}
-
-.scared-ghost {
-  background-color: aquamarine;
+  background: linear-gradient(45deg, rgb(255, 0, 255), rgb(146, 0, 134));
   border: 0px;
 }
 
 .pac-man {
-  background-color: orange;
+  /* background-color: orange; */
+  /* background: radial-gradient(#f64f59, #c471ed, #12c2e9); */
+  /* background: radial-gradient(#12c2e9, #0b528d); */
+  background: radial-gradient(var(--main-yellow-color), rgb(214, 240, 65));
+  box-shadow: 0 0 20px var(--main-yellow-color);
   border-radius: 10px;
+  z-index: 3;
+  position: relative;
+}
+
+.pac-man::before {
+  width: 5px;
+  height: 5px;
+  left: 2px;
+  top: 4px;
+  border-radius: 100%;
+  background-color: rgb(71, 73, 0);
+  position: absolute;
+  content: '';
+}
+
+.pac-man::after {
+  width: 5px;
+  height: 5px;
+  right: 2px;
+  top: 4px;
+  border-radius: 100%;
+  background-color: rgb(71, 73, 0);
+  position: absolute;
+  content: '';
+}
+
+.ghost {
+  position: relative;
+}
+.ghost::before {
+  width: 5px;
+  height: 5px;
+  left: 2px;
+  top: 4px;
+  border-radius: 100%;
+  background-color: rgb(46, 48, 0);
+  position: absolute;
+  content: '';
+}
+.ghost::after {
+  width: 5px;
+  height: 5px;
+  right: 2px;
+  top: 4px;
+  border-radius: 100%;
+  background-color: rgb(46, 48, 0);
+  position: absolute;
+  content: '';
 }
