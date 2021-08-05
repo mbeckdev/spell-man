@@ -112,8 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // get random word for specific level
 
   function randomLevelWord(lvl) {
-    let n;
-    let word;
+    let n, word;
     switch (lvl) {
       case 1:
         n = Math.floor(Math.random() * words.wordList.list1.length) + 1;
