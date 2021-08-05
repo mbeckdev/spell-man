@@ -10,11 +10,6 @@ bite_music.setAttribute(
   'music/zapsplat_cartoon_bite_single_crunch_001_29121.mp3'
 );
 
-// autoplay sound
-window.addEventListener('click', () => {
-  document.getElementById('audioplayer').play();
-});
-
 document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid');
   const scoreDisplay = document.getElementById('score');
@@ -137,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function playButtonClicked() {
-
     switch (gameState) {
       case 'initial':
         gameState = 'playing';
@@ -271,7 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //   change ghosts[  ..stuff.. ] because this has starting positions in it
     // ghost placement for initial board
-
 
     ghosts = [
       new Ghost('blinky', allLevels[currentLevel].fourGhostPositions[0], 250),
@@ -605,3 +598,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
+// ******** MUSIC SECTION **********
+
+let musicPlaying = false;
+const music = document.getElementById('audioplayer');
+// autoplay sound
+window.addEventListener('click', startPlayingMusic);
+
+function startPlayingMusic() {
+  music.volume = 0.5;
+  music.play();
+  musicPlaying = true;
+}
+
+const musicToggle = document.getElementById('music-toggle-container');
+const crossOut = document.getElementById('cross-out-line');
+// window.removeEventListener('click',toggleMusic)
+musicToggle.addEventListener('click', toggleMusic);
+
+function toggleMusic() {
+  window.removeEventListener('click', startPlayingMusic);
+
+  if (!musicPlaying) {
+    musicPlaying = true;
+    music.play();
+    // show no cross out line
+    crossOut.classList.add('hidden');
+  } else {
+    musicPlaying = false;
+    music.pause();
+    // show the cross out line
+    crossOut.classList.remove('hidden');
+  }
+}
+
+// ******** END OF MUSIC SECTION **********
