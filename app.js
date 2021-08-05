@@ -88,19 +88,57 @@ document.addEventListener('DOMContentLoaded', () => {
   // plan out all levels here
 
   function planLevels() {
-    let level1 = new Level(1, 0, 'SEA', 518, [376, 404, 379, 407]);
+    let wordLevel;
+
+    wordLevel = randomLevelWord(1);
+    let level1 = new Level(1, 0, wordLevel, 518, [376, 404, 379, 407]);
     allLevels.push(level1);
-    let level2 = new Level(2, 1, 'HATS', 490, [349, 377, 352, 380]);
+
+    wordLevel = randomLevelWord(2);
+    let level2 = new Level(2, 1, wordLevel, 490, [349, 377, 352, 380]);
     allLevels.push(level2);
-    let level3 = new Level(3, 0, 'IIII', 518, [376, 404, 379, 407]);
+
+    wordLevel = randomLevelWord(3);
+    let level3 = new Level(3, 0, wordLevel, 518, [376, 404, 379, 407]);
     allLevels.push(level3);
-    let level4 = new Level(4, 1, 'JJJJ', 490, [349, 377, 352, 380]);
+
+    wordLevel = randomLevelWord(3);
+    let level4 = new Level(4, 1, wordLevel, 490, [349, 377, 352, 380]);
     allLevels.push(level4);
 
     //490, [348, 376, 351, 379] <- original spots
   }
 
+  // get random word for specific level
+
+  function randomLevelWord(lvl) {
+    let n;
+    let word;
+    switch (lvl) {
+      case 1:
+        n = Math.floor(Math.random() * words.wordList.list1.length) + 1;
+        word = words.wordList.list1[n];
+        break;
+      case 2:
+        n = Math.floor(Math.random() * words.wordList.list2.length) + 1;
+        word = words.wordList.list2[n];
+        break;
+      case 3:
+        n = Math.floor(Math.random() * words.wordList.list3.length) + 1;
+        word = words.wordList.list3[n];
+        break;
+      case 4:
+        n = Math.floor(Math.random() * words.wordList.list3.length) + 1;
+        word = words.wordList.list3[n];
+        break;
+      default:
+        break;
+    }
+    return word.toUpperCase();
+  }
+
   function playButtonClicked() {
+
     switch (gameState) {
       case 'initial':
         gameState = 'playing';
@@ -181,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function putLettersOnGrid(wordToSpell) {
     let pastLetterSpaces = [];
     for (let i = 0; i < wordToSpell.length; i++) {
-      
+
       let randomLetterIndex = Math.floor(
         Math.random() * posibleLetterSpaces.length
       );
@@ -190,10 +228,10 @@ document.addEventListener('DOMContentLoaded', () => {
           Math.random() * posibleLetterSpaces.length
         );
       }
-      
+
       pastLetterSpaces.push(randomLetterIndex);
       // console.log(posibleLetterSpaces)
-      
+
       squares[posibleLetterSpaces[randomLetterIndex]].classList.add('letter');
       squares[posibleLetterSpaces[randomLetterIndex]].textContent = wordToSpell[i];
     }
@@ -231,6 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //   change ghosts[  ..stuff.. ] because this has starting positions in it
     // ghost placement for initial board
+
+
     ghosts = [
       new Ghost('blinky', allLevels[currentLevel].fourGhostPositions[0], 250),
       new Ghost('pinky', allLevels[currentLevel].fourGhostPositions[1], 400),
@@ -308,7 +348,8 @@ document.addEventListener('DOMContentLoaded', () => {
       word_display.appendChild(square);
     }
     const fullWord = document.getElementById('full-word');
-    fullWord.textContent = word}
+    fullWord.textContent = word
+  }
 
   // Starting position of pac-man
   function setCharacterPosition(startingIndex, levelIndex) {
@@ -404,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
       letterIndex++;
       squares[pacmanCurrentIndex].classList.remove('letter');
       squares[pacmanCurrentIndex].textContent = '';
-      score += 10; 
+      score += 10;
     }
 
   }
@@ -528,8 +569,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // if you used all the letters and they weren't in the right spots
     // (if they were in the right spots)
-    if ((letterIndex === word.length) && 
-        (wordWritten !== word)
+    if ((letterIndex === word.length) &&
+      (wordWritten !== word)
     ) {
       dontAllowPlay();
       gameState = 'lost';
@@ -544,15 +585,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (letterIndex === word.length) {
 
       wordWritten = '';
-      for(let i = 0; i <word_display.children.length; i++) {
+      for (let i = 0; i < word_display.children.length; i++) {
         wordWritten += word_display.childNodes[i].textContent;
       }
-      
+
       if (wordWritten == word) {
         // if (score === 274 || letterIndex === word.length) {
         gameState = 'won';
         console.log(letterIndex);
-  
+
         dontAllowPlay();
         document.removeEventListener('keyup', movePacman);
         scoreDisplay.textContent = 'YOU WIN';
