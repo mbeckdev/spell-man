@@ -181,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function putLettersOnGrid(wordToSpell) {
     let pastLetterSpaces = [];
     for (let i = 0; i < wordToSpell.length; i++) {
-      
       let randomLetterIndex = Math.floor(
         Math.random() * posibleLetterSpaces.length
       );
@@ -190,17 +189,18 @@ document.addEventListener('DOMContentLoaded', () => {
           Math.random() * posibleLetterSpaces.length
         );
       }
-      
+
       pastLetterSpaces.push(randomLetterIndex);
       // console.log(posibleLetterSpaces)
-      
+
       squares[posibleLetterSpaces[randomLetterIndex]].classList.add('letter');
-      squares[posibleLetterSpaces[randomLetterIndex]].textContent = wordToSpell[i];
+      squares[posibleLetterSpaces[randomLetterIndex]].textContent =
+        wordToSpell[i];
     }
 
     // fill in the rest of possible letter spaces with pac dots
     for (let i = 0; i < posibleLetterSpaces.length; i++) {
-      if ((squares[posibleLetterSpaces[i]].textContent == '')) {
+      if (squares[posibleLetterSpaces[i]].textContent == '') {
         squares[posibleLetterSpaces[i]].classList.add('pac-dot');
       }
     }
@@ -216,6 +216,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // for (let i = 0; i < ghosts.length; i++) {
     grid.querySelectorAll('.ghost').forEach((thisDiv) => {
       thisDiv.classList.remove('ghost');
+      if (thisDiv.classList.contains('scared-ghost')) {
+        thisDiv.classList.remove('scared-ghost');
+      }
     });
     grid.querySelector('.blinky').classList.remove('blinky');
     grid.querySelector('.pinky').classList.remove('pinky');
@@ -298,17 +301,11 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < word.length; i++) {
       const square = document.createElement('div');
       square.className = 'character';
-      square.style.display = 'inline-block';
-      square.style.width = '40px';
-      square.style.height = '70px';
-      square.style.color = 'rgb(212, 69, 69)';
-      square.style.fontSize = '50px';
-      square.style.border = '1px solid black';
-      square.style.padding = '0px 2px';
       word_display.appendChild(square);
     }
     const fullWord = document.getElementById('full-word');
-    fullWord.textContent = word}
+    fullWord.textContent = word;
+  }
 
   // Starting position of pac-man
   function setCharacterPosition(startingIndex, levelIndex) {
@@ -320,7 +317,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function movePacman(e) {
     squares[pacmanCurrentIndex].classList.remove('pac-man');
 
-    console.log(pacmanCurrentIndex);
     switch (e.keyCode) {
       // left arrow key moves left
       case 37:
@@ -399,14 +395,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const lettersOnBoard = document.querySelectorAll('.letter');
     const curr_letters = document.querySelectorAll('.character');
     if (squares[pacmanCurrentIndex].classList.contains('letter')) {
-      curr_letters[letterIndex].textContent =
-        squares[pacmanCurrentIndex].textContent;
-      letterIndex++;
-      squares[pacmanCurrentIndex].classList.remove('letter');
-      squares[pacmanCurrentIndex].textContent = '';
-      score += 10; 
-    }
+      let correctLetter = word[letterIndex];
+      let letterYouAte = squares[pacmanCurrentIndex].textContent;
+      // if letter is correct letter ....
+      if (letterYouAte == correctLetter) {
+        curr_letters[letterIndex].textContent =
+          squares[pacmanCurrentIndex].textContent;
+        letterIndex++;
+        squares[pacmanCurrentIndex].classList.remove('letter');
+        squares[pacmanCurrentIndex].textContent = '';
+        score += 10;
 
+        // else -> remove life and reset char and enemies
+      } else {
+        dontAllowPlay();
+        lives--;
+        livesOnScreen.textContent = lives;
+        resetPositionsOnly();
+        allowPlay();
+        checkGameOver();
+      }
+    }
   }
 
   // What happens when you eat a power-pellet
@@ -526,11 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // });
     }
 
-    // if you used all the letters and they weren't in the right spots
-    // (if they were in the right spots)
-    if ((letterIndex === word.length) && 
-        (wordWritten !== word)
-    ) {
+    if (lives <= 0) {
       dontAllowPlay();
       gameState = 'lost';
       scoreDisplay.textContent = 'GAME OVER';
@@ -542,17 +547,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check for a win
   function checkForWin() {
     if (letterIndex === word.length) {
-
       wordWritten = '';
-      for(let i = 0; i <word_display.children.length; i++) {
+      for (let i = 0; i < word_display.children.length; i++) {
         wordWritten += word_display.childNodes[i].textContent;
       }
-      
+
       if (wordWritten == word) {
         // if (score === 274 || letterIndex === word.length) {
         gameState = 'won';
         console.log(letterIndex);
-  
+
         dontAllowPlay();
         document.removeEventListener('keyup', movePacman);
         scoreDisplay.textContent = 'YOU WIN';

@@ -1,5 +1,4 @@
 # word-chomp
 
-a game for a gamejam
-
-Ceki is here
+Spell words by picking up letters.
+Made for the Odin Project TOP Jam 1 - Edutainment
