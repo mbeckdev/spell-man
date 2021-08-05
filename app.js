@@ -110,19 +110,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let n, word;
     switch (lvl) {
       case 1:
-        n = Math.floor(Math.random() * words.wordList.list1.length) + 1;
+        n = Math.floor(Math.random() * words.wordList.list1.length);
         word = words.wordList.list1[n];
         break;
       case 2:
-        n = Math.floor(Math.random() * words.wordList.list2.length) + 1;
+        n = Math.floor(Math.random() * words.wordList.list2.length);
         word = words.wordList.list2[n];
         break;
       case 3:
-        n = Math.floor(Math.random() * words.wordList.list3.length) + 1;
+        n = Math.floor(Math.random() * words.wordList.list3.length);
         word = words.wordList.list3[n];
         break;
       case 4:
-        n = Math.floor(Math.random() * words.wordList.list3.length) + 1;
+        n = Math.floor(Math.random() * words.wordList.list3.length);
         word = words.wordList.list3[n];
         break;
       default:
