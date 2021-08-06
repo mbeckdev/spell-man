@@ -695,15 +695,19 @@ const appearingMessage = document.querySelector('.appearing-message');
 
 function playAnimation(message) {
   if (message == 'YOU WIN!') {
+    removeAnimations();
     appearingMessage.textContent = 'YOU WIN!';
     appearingMessage.classList.add('won-animation');
   } else if (message == 'YOU LOST') {
+    removeAnimations();
     appearingMessage.textContent = 'TRY AGAIN';
     appearingMessage.classList.add('lost-animation');
   } else if (message == 'WRONG LETTER') {
+    removeAnimations();
     appearingMessage.textContent = 'Oops! Wrong letter';
     appearingMessage.classList.add('wrong-letter-animation');
   } else if (message == 'GHOST HIT') {
+    removeAnimations();
     appearingMessage.textContent = 'Hit by a ghost!';
     appearingMessage.classList.add('ghost-hit-animation');
   }
