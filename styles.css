@@ -52,6 +52,11 @@ h2 {
   text-shadow: 1px 1px 5px black;
 }
 
+#directions {
+  display: flex;
+  white-space: nowrap;
+}
+
 #display-word {
   /* width: 200px; */
   height: 3rem;
