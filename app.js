@@ -722,3 +722,16 @@ function endWonAnimation() {
 }
 
 // ******** END OF CSS ANIMATIONS SECTION ********
+
+// ********* disable arrow keys making the browser window scroll *********
+window.addEventListener(
+  'keydown',
+  function (e) {
+    if (
+      ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.code) > -1
+    ) {
+      e.preventDefault();
+    }
+  },
+  false
+);
