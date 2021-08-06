@@ -90,6 +90,18 @@ let words = (function () {
       'watchfully',
       'excitement',
       'delighted',
+    ],
+    list4: [
+      'mississippi',
+      'circumlocution',
+      'circumscribe',
+      'commensurate',
+      'diaphanous',
+      'disaffected',
+      'embezzlement',
+      'forbearance',
+      'grandiloquent',
+      'heterogenous',
     ]
   };
 

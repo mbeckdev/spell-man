@@ -161,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'won':
         // you clicked on 'next level', so load the next level
         currentLevel++;
+        ghosts.forEach((ghost) => ghostLevelSpeed(ghost));
         letterIndex = 0;
         createLevel(currentLevel + 1, allLevels[currentLevel].word);
 
@@ -488,6 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function tellGhostsToMove() {
     // Move the ghosts randomly
     ghosts.forEach((ghost) => moveGhost(ghost));
+
   }
 
   // Write the function to move the ghosts
@@ -540,6 +542,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       checkGameOver();
     }, ghost.speed);
+  }
+
+  // Change ghost speed depending on level
+
+  function ghostLevelSpeed(ghost) {
+    ghost.speed += 500;
   }
 
   // Check for game over
