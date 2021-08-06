@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     allLevels.push(level2);
 
     wordLevel = randomLevelWord(3);
-    let level3 = new Level(3, 0, wordLevel, 518, [376, 404, 379, 407]);
+    let level3 = new Level(3, 2, wordLevel, 518, [376, 404, 379, 407]);
     allLevels.push(level3);
 
     wordLevel = randomLevelWord(4);
@@ -361,8 +361,8 @@ document.addEventListener('DOMContentLoaded', () => {
           pacmanCurrentIndex -= 1;
         }
         // Check if pacman is in the left exit
-        if (pacmanCurrentIndex - 1 === 363) {
-          pacmanCurrentIndex = 391;
+        if (pacmanCurrentIndex - 1 === 391) {
+          pacmanCurrentIndex = 419;
         }
 
         break;
@@ -387,8 +387,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Check if pacman is in the right exit
-        if (pacmanCurrentIndex + 1 === 392) {
-          pacmanCurrentIndex = 364;
+        if (pacmanCurrentIndex + 1 === 420) {
+          pacmanCurrentIndex = 392;
         }
 
         break;
@@ -489,7 +489,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function tellGhostsToMove() {
     // Move the ghosts randomly
     ghosts.forEach((ghost) => moveGhost(ghost));
-
   }
 
   // Write the function to move the ghosts
@@ -595,13 +594,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (wordWritten == word) {
         // if (score === 274 || letterIndex === word.length) {
         gameState = 'won';
-        console.log(letterIndex);
 
         dontAllowPlay();
         document.removeEventListener('keyup', movePacman);
         scoreDisplay.textContent = 'YOU WIN';
         playButton.classList.remove('hidden');
         playButton.textContent = 'NEXT LEVEL';
+        // playAnimation('YOU WIN!');
       }
     }
   }
