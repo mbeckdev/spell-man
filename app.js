@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     allLevels.push(level1);
 
     wordLevel = randomLevelWord(2);
-    let level2 = new Level(2, 1, wordLevel, 490, [349, 377, 352, 380]);
+    let level2 = new Level(2, 1, wordLevel, 518, [349, 377, 352, 380]);
     allLevels.push(level2);
 
     wordLevel = randomLevelWord(3);
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
     allLevels.push(level3);
 
     wordLevel = randomLevelWord(4);
-    let level4 = new Level(4, 1, wordLevel, 490, [349, 377, 352, 380]);
+    let level4 = new Level(4, 1, wordLevel, 518, [349, 377, 352, 380]);
     allLevels.push(level4);
 
     //490, [348, 376, 351, 379] <- original spots
