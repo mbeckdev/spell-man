@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
       this.currentIndex = startIndex;
       this.timerId = NaN;
       this.isScared = false;
+      this.justAtTop = false;
+      this.justAtBottom = false;
     }
   }
 
@@ -86,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let wordLevel;
 
     wordLevel = randomLevelWord(1);
-    let level1 = new Level(1, 0, wordLevel, 518, [376, 404, 379, 407]);
+    let level1 = new Level(1, 1, wordLevel, 518, [376, 404, 379, 407]);
     allLevels.push(level1);
 
     wordLevel = randomLevelWord(2);
@@ -375,6 +377,12 @@ document.addEventListener('DOMContentLoaded', () => {
         ) {
           pacmanCurrentIndex -= width;
         }
+
+        // Check if pacman is in the top exit
+        if (pacmanCurrentIndex === 14) {
+          pacmanCurrentIndex = 770;
+        }
+
         break;
       // right arrow moves right
       case 39:
@@ -401,6 +409,12 @@ document.addEventListener('DOMContentLoaded', () => {
         ) {
           pacmanCurrentIndex += width;
         }
+
+        // Check if pacman is in the bottom exit
+        if (pacmanCurrentIndex === 770) {
+          pacmanCurrentIndex = 14;
+        }
+
         break;
     }
 
@@ -491,37 +505,65 @@ document.addEventListener('DOMContentLoaded', () => {
     ghosts.forEach((ghost) => moveGhost(ghost));
   }
 
+  // let blinkyJustatBottom = false;
+  // let blinkyJustatTop = false;
   // Write the function to move the ghosts
   function moveGhost(ghost) {
     const directions = [-1, +1, width, -width];
     let direction = directions[Math.floor(Math.random() * directions.length)];
 
     ghost.timerId = setInterval(function () {
-      // If the square your ghost is going to go in does NOT contain a wall and a ghost, you can go there
-      if (
-        !squares[ghost.currentIndex + direction].classList.contains('wall') &&
-        !squares[ghost.currentIndex + direction].classList.contains('ghost')
-      ) {
-        // you can go here
-        // remove all ghost related classes
+      // Check for top and bottom teleportation
+      // check if at the top
+      if (ghost.currentIndex === 14 && !ghost.justAtBottom) {
+        ghost.justAtTop = true;
         squares[ghost.currentIndex].classList.remove(
           ghost.className,
           'ghost',
           'scared-ghost'
         );
-        // Change the currentIndex to the new safe sqware
-        ghost.currentIndex += direction;
-        // redraw the ghost in the new safe space
+        ghost.currentIndex = 770;
         squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
-
-        // else find a new direction to try
+        // check if at the bottom
+      } else if (ghost.currentIndex === 770 && !ghost.justAtTop) {
+        ghost.justAtBottom = true;
+        squares[ghost.currentIndex].classList.remove(
+          ghost.className,
+          'ghost',
+          'scared-ghost'
+        );
+        ghost.currentIndex = 14;
+        squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
+        // if not at top or bottom
       } else {
-        direction = directions[Math.floor(Math.random() * directions.length)];
-      }
+        // If the square your ghost is going to go in does NOT contain a wall and a ghost, you can go there
+        ghost.justAtBottom = false;
+        ghost.justAtTop = false;
+        if (
+          !squares[ghost.currentIndex + direction].classList.contains('wall') &&
+          !squares[ghost.currentIndex + direction].classList.contains('ghost')
+        ) {
+          // you can go here
+          // remove all ghost related classes
+          squares[ghost.currentIndex].classList.remove(
+            ghost.className,
+            'ghost',
+            'scared-ghost'
+          );
+          // Change the currentIndex to the new safe sqware
+          ghost.currentIndex += direction;
+          // redraw the ghost in the new safe space
+          squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
 
-      // if the ghost is currently scared
-      if (ghost.isScared) {
-        squares[ghost.currentIndex].classList.add('scared-ghost');
+          // else find a new direction to try
+        } else {
+          direction = directions[Math.floor(Math.random() * directions.length)];
+        }
+
+        // if the ghost is currently scared
+        if (ghost.isScared) {
+          squares[ghost.currentIndex].classList.add('scared-ghost');
+        }
       }
 
       // if the ghost is scared and pacman runs into it
