@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   livesOnScreen.textContent = maxLives;
   let posibleLetterSpaces = [];
   let wordWritten = '';
+  const levelNum = document.getElementById('level-number');
 
   // Create our Ghost template
   class Ghost {
@@ -153,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         letterIndex = 0;
         score = 0;
         scoreDisplay.textContent = score;
+        levelNum.textContent = currentLevel + 1;
         createLevel(currentLevel + 1, allLevels[currentLevel].word);
 
         gameState = 'playing';
@@ -166,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ghosts.forEach((ghost) => ghostLevelSpeed(ghost));
         letterIndex = 0;
         createLevel(currentLevel + 1, allLevels[currentLevel].word);
-
+        levelNum.textContent = currentLevel + 1;
         gameState = 'playing';
         allowPlay();
         //hide button because you'll be playing now
