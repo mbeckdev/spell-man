@@ -169,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         letterIndex = 0;
         createLevel(currentLevel + 1, allLevels[currentLevel].word);
         levelNum.textContent = currentLevel + 1;
+        scoreDisplay.textContent = score;
         gameState = 'playing';
         allowPlay();
         //hide button because you'll be playing now
