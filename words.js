@@ -102,6 +102,14 @@ let words = (function () {
       'forbearance',
       'grandiloquent',
       'heterogenous',
+      'idiosyncratic',
+      'iconoclast',
+      'impecunious',
+      'incontrovertible',
+      'obstreperous',
+      'preponderance',
+      'sanctimonious',
+      'flabbergasted',
     ]
   };
 

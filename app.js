@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let level3 = new Level(3, 0, wordLevel, 518, [376, 404, 379, 407]);
     allLevels.push(level3);
 
-    wordLevel = randomLevelWord(3);
+    wordLevel = randomLevelWord(4);
     let level4 = new Level(4, 1, wordLevel, 490, [349, 377, 352, 380]);
     allLevels.push(level4);
 
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 4:
         n = Math.floor(Math.random() * words.wordList.list3.length);
-        word = words.wordList.list3[n];
+        word = words.wordList.list4[n];
         break;
       default:
         break;
