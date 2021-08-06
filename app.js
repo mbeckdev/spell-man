@@ -148,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 'lost':
         // you clicked on 'play again', so start game over
+        removeAnimations();
         lives = maxLives;
         livesOnScreen.textContent = lives;
         currentLevel = 0;
@@ -164,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 'won':
         // you clicked on 'next level', so load the next level
+        removeAnimations();
         currentLevel++;
         ghosts.forEach((ghost) => ghostLevelSpeed(ghost));
         letterIndex = 0;
@@ -461,6 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dontAllowPlay();
         lives--;
         livesOnScreen.textContent = lives;
+        playAnimation('WRONG LETTER');
         resetPositionsOnly();
         allowPlay();
         checkGameOver();
@@ -606,25 +609,24 @@ document.addEventListener('DOMContentLoaded', () => {
       if (lives > 0) {
         resetPositionsOnly();
         allowPlay();
+        playAnimation('GHOST HIT');
         // else you lost the game, you'll have to start over from the beginning
       } else {
         gameState = 'lost';
-        scoreDisplay.textContent = 'GAME OVER';
         playButton.classList.remove('hidden');
         playButton.textContent = 'PLAY AGAIN';
+        removeAnimations();
+        playAnimation('YOU LOST');
       }
-
-      // setTimeout(function () {
-      //   alert('Game Over!'),500;
-      // });
     }
 
     if (lives <= 0) {
       dontAllowPlay();
       gameState = 'lost';
-      scoreDisplay.textContent = 'GAME OVER';
       playButton.classList.remove('hidden');
       playButton.textContent = 'PLAY AGAIN';
+      removeAnimations();
+      playAnimation('YOU LOST');
     }
   }
 
@@ -637,7 +639,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (wordWritten == word) {
-        // if (score === 274 || letterIndex === word.length) {
         gameState = 'won';
 
         dontAllowPlay();
@@ -645,7 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreDisplay.textContent = 'YOU WIN';
         playButton.classList.remove('hidden');
         playButton.textContent = 'NEXT LEVEL';
-        // playAnimation('YOU WIN!');
+        playAnimation('YOU WIN!');
       }
     }
   }
@@ -662,6 +663,7 @@ function startPlayingMusic() {
   music.volume = 0.5;
   music.play();
   musicPlaying = true;
+  window.removeEventListener('click', startPlayingMusic);
 }
 
 const musicToggle = document.getElementById('music-toggle-container');
@@ -686,3 +688,37 @@ function toggleMusic() {
 }
 
 // ******** END OF MUSIC SECTION **********
+
+// ******** CSS ANIMATIONS SECTION ********
+
+const appearingMessage = document.querySelector('.appearing-message');
+
+function playAnimation(message) {
+  if (message == 'YOU WIN!') {
+    appearingMessage.textContent = 'YOU WIN!';
+    appearingMessage.classList.add('won-animation');
+  } else if (message == 'YOU LOST') {
+    appearingMessage.textContent = 'TRY AGAIN';
+    appearingMessage.classList.add('lost-animation');
+  } else if (message == 'WRONG LETTER') {
+    appearingMessage.textContent = 'Oops! Wrong letter';
+    appearingMessage.classList.add('wrong-letter-animation');
+  } else if (message == 'GHOST HIT') {
+    appearingMessage.textContent = 'Hit by a ghost!';
+    appearingMessage.classList.add('ghost-hit-animation');
+  }
+}
+
+appearingMessage.addEventListener('animationend', removeAnimations);
+function removeAnimations() {
+  appearingMessage.classList.remove('won-animation');
+  appearingMessage.classList.remove('lost-animation');
+  appearingMessage.classList.remove('wrong-letter-animation');
+  appearingMessage.classList.remove('ghost-hit-animation');
+}
+
+function endWonAnimation() {
+  appearingMessage.classList.remove('won-animation');
+}
+
+// ******** END OF CSS ANIMATIONS SECTION ********
