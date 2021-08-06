@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let wordLevel;
 
     wordLevel = randomLevelWord(1);
-    let level1 = new Level(1, 1, wordLevel, 518, [376, 404, 379, 407]);
+    let level1 = new Level(1, 0, wordLevel, 518, [376, 404, 379, 407]);
     allLevels.push(level1);
 
     wordLevel = randomLevelWord(2);
