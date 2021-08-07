@@ -640,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Change ghost speed depending on level
 
   function ghostLevelSpeed(ghost) {
-    ghost.speed += 500;
+    ghost.speed -= 0.5;
   }
 
   // Check for game over
