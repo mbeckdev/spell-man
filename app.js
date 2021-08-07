@@ -104,7 +104,50 @@ document.addEventListener('DOMContentLoaded', () => {
     let level4 = new Level(4, 1, wordLevel, 518, [349, 377, 352, 380]);
     allLevels.push(level4);
 
-    //490, [348, 376, 351, 379] <- original spots
+    // enable 300 more levels before the game breaks
+    let tempLevel = 4;
+    for (let i = 0; i < 100; i++) {
+      let ghostPositionsForBoard0 = [376, 404, 379, 407];
+      let ghostPositionsForBoard1 = [349, 377, 352, 380];
+      let ghostPositionsForBoard2 = [376, 404, 379, 407];
+
+      let randomList = Math.floor(Math.random() * 4) + 1; // 1, 2, 3, or 4
+      wordLevel = randomLevelWord(randomList);
+      tempLevel++;
+      let newLevelA = new Level(
+        tempLevel,
+        0,
+        wordLevel,
+        518,
+        ghostPositionsForBoard0
+      );
+
+      randomList = Math.floor(Math.random() * 4) + 1; // 1, 2, 3, or 4
+      wordLevel = randomLevelWord(randomList);
+      tempLevel++;
+      let newLevelB = new Level(
+        tempLevel,
+        1,
+        wordLevel,
+        518,
+        ghostPositionsForBoard1
+      );
+
+      randomList = Math.floor(Math.random() * 4) + 1; // 1, 2, 3, or 4
+      wordLevel = randomLevelWord(randomList);
+      tempLevel++;
+      let newLevelC = new Level(
+        tempLevel,
+        2,
+        wordLevel,
+        518,
+        ghostPositionsForBoard2
+      );
+
+      allLevels.push(newLevelA);
+      allLevels.push(newLevelB);
+      allLevels.push(newLevelC);
+    }
   }
 
   // get random word for specific level
