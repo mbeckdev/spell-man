@@ -686,7 +686,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         dontAllowPlay();
         document.removeEventListener('keyup', movePacman);
-        scoreDisplay.textContent = 'YOU WIN';
         playButton.classList.remove('hidden');
         playButton.textContent = 'NEXT LEVEL';
         playAnimation('YOU WIN!');
