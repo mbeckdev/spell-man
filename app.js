@@ -199,6 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
         score = 0;
         scoreDisplay.textContent = score;
         levelNum.textContent = currentLevel + 1;
+
+        allLevels = [];
+        planLevels();
         createLevel(currentLevel + 1, allLevels[currentLevel].word);
 
         gameState = 'playing';
